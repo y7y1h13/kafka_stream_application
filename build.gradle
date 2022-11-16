@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group 'com.st'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.st.StreamsFilter'
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+dependencies {
+    implementation 'org.apache.kafka:kafka-streams:2.5.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'io.confluent:kafka-streams-json-schema-serde:7.3.0'
+}
